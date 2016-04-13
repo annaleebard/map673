@@ -93,7 +93,7 @@
 <body>
 	<header>
 		<h1>Kentucky Home Ownership </h1>
-		<h2>by Mortgage</h2>
+		<h2>by County</h2>
 	</header>
 
 	<div id='map'></div>
@@ -117,8 +117,8 @@
 		var map = L.map('map', options);
 
 		var dataLayer,
-			attribute = "OWNED_MORT",
-			norm = "OWNER";
+			attribute = "OWNER",
+			norm = "TOTAL";
 
 
 		$.getJSON("ky_counties_housing.json", function (data) {
@@ -143,13 +143,20 @@
 
 			var breaks = getClassBreaks();
 
-			console.log(breaks);
+			//console.log(breaks);
 
 			//loop through layer
 			dataLayer.eachLayer(function (layer) {
 				layer.setStyle({
 					fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
 				});
+				
+				var popupValue = layer.feature.properties[attribute]/layer.feature.properties[norm];
+				
+				layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" County</b></br>" + attribute+ " " + (popupValue*100).toLocaleString() + "%");
+					
+				//console.log (layer.feature.properties);
+				
 			});
 
 
@@ -160,6 +167,8 @@
 
 					var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
 					values.push(value);
+					
+					
 				});
 
 				var clusters = ss.ckmeans(values, 5);
@@ -169,15 +178,16 @@
 				var breaks = clusters.map(function (cluster) {
 					return [cluster[0], cluster.pop()];
 
-
 				});
-				console.log(breaks);
+				
 				return breaks;
 
 			}
 			drawLegend(breaks);
 		}
 
+	
+		
 		function getColor(d, breaks) {
 
 			if (d <= breaks[0][1]) {
@@ -203,7 +213,7 @@
 
 				var div = L.DomUtil.create('div', 'legend');
 
-				div.innerHTML = "<h3>" + "% Owners with Mortgage" + "</h3>";
+				div.innerHTML = "<h3>" + "% Housing Units <br>Occupied by Owner" + "</h3>";
 
 				//loop through breaks array
 				for (var i = 0; i < breaks.length; i++) {
