@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<title>Lab 01 ALEB</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+	<script src="https://code.jquery.com/jquery-1.12.2.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/1.0.1/simple_statistics.js"></script>
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background: whitesmoke;
+			font-family: Lato, sans-serif;
+			color: #0D0000;
+		}
+		
+		header {
+			width: 80%;
+			margin: 10px auto 10px auto;
+		}
+		
+		h1 {
+			display: inline-block;
+			margin-right: 20px;
+			color: #001323;
+		}
+		
+		h2 {
+			display: inline-block;
+			color: #001323;
+		}
+		
+		#map {
+			width: 80%;
+			height: 540px;
+			margin: 10px auto 10px auto;
+			background: whitesmoke;
+			border: 2px solid #dddedf;
+		}
+		
+		footer {
+			width: 80%;
+			margin: 10px auto 10px auto;
+		}
+		
+		p {
+			font-size: 1em;
+			color: #001323;
+		}
+		
+		.legend {
+			padding: 6px 8px;
+			font-size: 1em;
+			background: rgba(255, 255, 255, .5);
+			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+			border-radius: 5px;
+		}
+		
+		.legend h3 {
+			font-size: 1.1em;
+			font-weight: bold;
+			color: '#045a8d';
+			margin: 0 0 10px 0;
+		}
+		
+		.legend span {
+			width: 20px;
+			height: 20px;
+			float: left;
+			margin-right: 10px;
+		}
+		
+		.legend label {
+			font-size: 1.1em;
+		}
+		
+		.legend label:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+		
+		
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Percentage of Population with Disabilities</h1>
+		<h2>by County</h2>
+	</header>
+
+	<div id='map'></div>
+
+	<footer>
+		<p>Map authored by Anna Bard</p>
+		<h4>Questions toward developing "Critical Map Literacy": </h4>
+		<ol>
+			<li>What is the purpose of the map?</li>
+			<li>How does cartographic symbology influence or distort the representation of the data?</li>
+			<li>Does the map have a point of view or support and argument?</li>
+		</ol>
+	</footer>
+
+	<script>
+		var options = {
+			center: [37.8, -85.8],
+			zoom: 7.4,
+			zoomControl: false
+		}
+		var map = L.map('map', options);
+
+		
+
+
+		var dataLayer,
+			attribute = "us_DISABILITY_COUNTY_TOTAL_DIS",
+			norm = "us_DISABILITY_COUNTY_TOTAL_POP";
+
+
+		$.getJSON("US_DIS_POP.json", function (data) {
+			//create new geojson layer, style, and add to map
+			dataLayer = L.geoJson(data, {
+				style: function (feature) {
+					return {
+						color: 'white',
+						weight: 1.5,
+						strokeOpacity: .5,
+						fillOpacity: 1,
+						fillColor: '#1f78b4'
+					};
+				}
+
+			}).addTo(map);
+
+			drawMap();
+
+		});
+
+		function drawMap() {
+
+			var breaks = getClassBreaks();
+
+			//console.log(breaks);
+
+			//loop through layer
+			dataLayer.eachLayer(function (layer) {
+				layer.setStyle({
+					fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
+				});
+
+				var popupValue = layer.feature.properties[attribute] / layer.feature.properties[norm];
+
+				layer.bindPopup("<b>" + layer.feature.properties["NAME"] + " County</b></br>" + "Population with Disability" + " " + (popupValue * 100).toLocaleString() + "%");
+
+				//console.log (layer.feature.properties);
+
+			});
+
+
+			function getClassBreaks() {
+
+				var values = [];
+				dataLayer.eachLayer(function (layer) {
+
+					var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
+					values.push(value);
+					//console.log(layer.feature.properties);
+
+				});
+
+				var breaks = ss.quantile(values, [0, 0.2, 0.4, 0.6, 0.8, 1]);
+
+
+				return breaks;
+
+			}
+			drawLegend(breaks);
+		}
+
+
+
+		function getColor(d, breaks) {
+
+			if (d <= breaks[1]) {
+				return '#f1eef6';
+			} else if (d <= breaks[2]) {
+				return '#bdc9e1';
+			} else if (d <= breaks[3]) {
+				return '#74a9cf';
+			} else if (d <= breaks[4]) {
+				return '#2b8cbe'
+			} else if (d <= breaks[5]) {
+				return '#045a8d'
+			}
+		}
+
+		function drawLegend(breaks) {
+
+			var legend = L.control({
+				position: 'topleft'
+			});
+
+			legend.onAdd = function () {
+
+				var div = L.DomUtil.create('div', 'legend');
+
+				div.innerHTML = "<h3>" + "% Population with Disability <br>" + "</h3>";
+
+				//loop through breaks array
+				for (var i = 0; i < breaks.length - 1; i++) {
+
+					//create variable 'color' and assign return result of getColor
+					var color = getColor(breaks[i + 1], breaks);
+
+					div.innerHTML +=
+						'<span style="background:' + color + '"></span> ' +
+						'<label>' + (breaks[i][1] * 100).toLocaleString() + ' &mdash; ' +
+						(breaks[i][4] * 100).toLocaleString() + '</label>';
+				}
+
+				return div;
+
+			};
+
+			legend.addTo(map);
+
+		}
+	</script>
+
+</body>
+
+</html>
