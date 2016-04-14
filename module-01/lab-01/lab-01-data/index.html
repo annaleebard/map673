@@ -87,6 +87,10 @@
 			display: block;
 			clear: both;
 		}
+		
+		li {
+			margin: 10px 0;
+		}
 	</style>
 </head>
 
@@ -101,9 +105,12 @@
 	<footer>
 		<p>Map authored by Anna Bard</p>
 		<h4>Questions toward developing "Critical Map Literacy": </h4>
-		<ol><li>What is the purpose of the map?</li>
-<li>How does cartographic symbology influence or distort the representation of the data?</li>
-<li>Does the map have a point of view or support and argument?</li>
+		<ol>
+			<li>The purpose of this map is to visualize an aspect of housing across Kentucky. This map sybmolizes the percentage of owner occupied homes by county. The number of home owners is normalized by the total number of households and delivered in a percentage.</li>
+
+			<li>With great power comes great responsibility. Creating data visualizations carries an obligation to tell the true(ish) story of the data. This map's sequential color scheme and classification method were intentionally chosen to responsibly visualize the data. Implementing a sequential color scheme that does not evenly distribute a hue's value between classes could greatly influence the map's story. The map's projection may also distort the data. If specific some counties were over inflated, the end user may consider this inappropriately enlarged area and it's statistics more significant. The same applies to an area that is spatially underrepresented or shrunken. After applying even the best color scheme and map projection the data could still be greatly skewed by the classification method employed and the number of classes chosen. It is important to understand your data and take time to test classification choices.</li>
+
+			<li>A cocktail of factors contribute to the percentage of home ownership across Kentucky. Eastern Kentucky though known for its economic blight has a relatively high percentage of home ownership, possibly due to affordability. In contrast, Fayette County has the second lowest percentage of home ownership. However, we may expect Fayette County to have a higher rate of ownership since it ranks fourth in income per capita. Maybe Lexington and Fayette County attract the more transient young professional and University student. It is possible buying a home in Fayette County is more difficult due to higher real estate values. This map supports the argument that there are many considerations that drive home ownership. While maps often answer a question this map also generates new questions.</li>
 		</ol>
 	</footer>
 
@@ -147,16 +154,17 @@
 
 			//loop through layer
 			dataLayer.eachLayer(function (layer) {
+				console.log(layer);
 				layer.setStyle({
 					fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
 				});
-				
-				var popupValue = layer.feature.properties[attribute]/layer.feature.properties[norm];
-				
-				layer.bindPopup("<b>"+layer.feature.properties["NAME"]+" County</b></br>" + attribute+ " " + (popupValue*100).toLocaleString() + "%");
-					
+
+				var popupValue = layer.feature.properties[attribute] / layer.feature.properties[norm];
+
+				layer.bindPopup("<b>" + layer.feature.properties["NAME"] + " County</b></br>" + attribute + " " + (popupValue * 100).toLocaleString() + "%");
+
 				//console.log (layer.feature.properties);
-				
+
 			});
 
 
@@ -167,8 +175,8 @@
 
 					var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
 					values.push(value);
-					
-					
+
+
 				});
 
 				var clusters = ss.ckmeans(values, 5);
@@ -179,15 +187,15 @@
 					return [cluster[0], cluster.pop()];
 
 				});
-				
+
 				return breaks;
 
 			}
 			drawLegend(breaks);
 		}
 
-	
-		
+
+
 		function getColor(d, breaks) {
 
 			if (d <= breaks[0][1]) {
