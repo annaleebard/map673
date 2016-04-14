@@ -59,7 +59,7 @@
 		.legend {
 			padding: 6px 8px;
 			font-size: 1em;
-			background: rgba(255, 255, 255, .5);
+			background: rgba(255, 255, 255, .8);
 			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 			border-radius: 5px;
 		}
@@ -112,8 +112,8 @@
 
 	<script>
 		var options = {
-			center: [37.8, -85.8],
-			zoom: 7.4,
+			center: [39.8, -98.8],
+			zoom: 4,
 			zoomControl: false
 		}
 		var map = L.map('map', options);
@@ -223,8 +223,9 @@
 
 					div.innerHTML +=
 						'<span style="background:' + color + '"></span> ' +
-						'<label>' + (breaks[i][1] * 100).toLocaleString() + ' &mdash; ' +
-						(breaks[i][4] * 100).toLocaleString() + '</label>';
+						'<label>' + (breaks[i]*100).toLocaleString() + ' &mdash; ' +
+						(breaks[i+1] * 100).toLocaleString() + '</label>';
+					console.log(breaks[i]);
 				}
 
 				return div;
