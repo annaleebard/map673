@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset=utf-8 />
-	<title>Lab 01 ALEB</title>
+	<title>Quantile</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
 	<script src="https://code.jquery.com/jquery-1.12.2.min.js"></script>
@@ -102,11 +102,8 @@
 
 	<footer>
 		<p>Map authored by Anna Bard</p>
-		<h4>Questions toward developing "Critical Map Literacy": </h4>
-		<ol>
-			<li>What is the purpose of the map?</li>
-			<li>How does cartographic symbology influence or distort the representation of the data?</li>
-			<li>Does the map have a point of view or support and argument?</li>
+		<h4>Quantile Classification </h4>
+		
 		</ol>
 	</footer>
 
@@ -206,7 +203,7 @@
 		function drawLegend(breaks) {
 
 			var legend = L.control({
-				position: 'topleft'
+				position: 'bottomleft'
 			});
 
 			legend.onAdd = function () {
