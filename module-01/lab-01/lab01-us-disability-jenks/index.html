@@ -181,11 +181,12 @@
 				dataLayer.eachLayer(function (layer) {
 					var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
 					 if(value) { values.push(value); }
+					
 				});
 			
 				
 				var breaks = ss.jenks(values, 5);
-				console.log(breaks);
+				
 				return breaks;
 			}
 		
@@ -206,11 +207,11 @@
 				for (var i = 0; i < breaks.length - 1; i++) {
 
 					//create variable 'color' and assign return result of getColor
-					var color = getColor(breaks[i + 1], breaks);
+					var color = getColor(breaks[i], breaks);
 					div.innerHTML +=
 						'<span style="background:' + color + '"></span> ' +
-						'<label>' + (breaks[i] * 100).toLocaleString() + ' &mdash; ' +
-						(breaks[i+1] * 100).toLocaleString() + '</label>';
+						'<label>' + (breaks[i-1] * 100).toLocaleString() + ' &mdash; ' +
+						(breaks[i] * 100).toLocaleString() + '</label>';
 				}
 
 				return div;
