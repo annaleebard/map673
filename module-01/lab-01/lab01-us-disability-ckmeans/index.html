@@ -156,7 +156,9 @@
 
 				dataLayer.eachLayer(function (layer) {
 					var value = (layer.feature.properties[attribute] / layer.feature.properties[norm])
+					if (value) {
 					values.push(value);
+				}
 
 					//console.log(values);
 				});
