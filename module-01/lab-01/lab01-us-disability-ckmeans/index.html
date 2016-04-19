@@ -87,8 +87,6 @@
 			display: block;
 			clear: both;
 		}
-		
-		
 	</style>
 </head>
 
@@ -140,7 +138,7 @@
 		function drawMap() {
 
 			var breaks = getClassBreaks();
-			
+
 			dataLayer.eachLayer(function (layer) {
 				layer.setStyle({
 					fillColor: getColor(layer.feature.properties[attribute] / layer.feature.properties[norm], breaks)
@@ -155,19 +153,21 @@
 			function getClassBreaks() {
 
 				var values = [];
-				
+
 				dataLayer.eachLayer(function (layer) {
-					values.push(layer.feature.properties[attribute] / layer.feature.properties[norm])
-					
-					
+					var value = (layer.feature.properties[attribute] / layer.feature.properties[norm])
+					values.push(value);
+
+					//console.log(values);
 				});
-				var clusters = ss.ckmeans(values,5);
-			
+				var clusters = ss.ckmeans(values, 5);
+
 				var breaks = clusters.map(function (cluster) {
 					return [cluster[0], cluster.pop()];
 				});
-		
+
 				return breaks;
+				console.log(breaks);
 			}
 			drawLegend(breaks);
 		}
@@ -175,19 +175,18 @@
 
 
 		function getColor(d, breaks) {
-			if (d <= breaks[0][1]) {
-				return '#f1eef6';
-			} else if (d <= breaks[1][1]) {
-				return '#bdc9e1';
-			} else if (d <= breaks[2][1]) {
-				return '#74a9cf';
-			} else if (d <= breaks[3][1]) {
-				return '#2b8cbe'
-			} else if (d <= breaks[4][1]) {
-				return '#045a8d'
-			}
-			console.log(breaks[1][1]);
-		}
+
+      if(d <= breaks[0][1]) {
+            return '#f1eef6';
+        } else if(d <= breaks[1][1]) {
+            return '#bdc9e1';
+        } else if(d <= breaks[2][1]) {
+            return '#74a9cf';
+        } else if(d <= breaks[3][1]) {
+            return '#2b8cbe'
+        } else if(d <= breaks[4][1]) {
+            return '#045a8d'
+        }}
 
 		function drawLegend(breaks) {
 
@@ -212,7 +211,7 @@
 						'<label>' + (breaks[i][0] * 100).toLocaleString() + ' &mdash; ' +
 						(breaks[i][1] * 100).toLocaleString() + '</label>';
 				}
-				
+
 				return div;
 
 			};
