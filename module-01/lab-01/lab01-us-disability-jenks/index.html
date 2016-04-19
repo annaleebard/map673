@@ -12,7 +12,7 @@
 
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-	
+
 
 	<style>
 		body {
@@ -88,8 +88,6 @@
 			display: block;
 			clear: both;
 		}
-		
-		
 	</style>
 </head>
 
@@ -104,7 +102,7 @@
 	<footer>
 		<p>Map authored by Anna Bard</p>
 		<h4>Jenks Classification</h4>
-		
+
 	</footer>
 
 	<script>
@@ -160,37 +158,41 @@
 		}
 
 
-		 function getColor(d, breaks) {
-            if (d <= breaks[1]) {
-                return '#f1eef6';
-            } else if (d <= breaks[2]) {
-                return '#bdc9e1';
-            } else if (d <= breaks[3]) {
-                return '#74a9cf';
-            } else if (d <= breaks[4]) {
-                return '#2b8cbe'
-            } else if (d <= breaks[5]) {
-                return '#045a8d'
-            }
-        }
+		function getColor(d, breaks) {
+			if (d <= breaks[1]) {
+				return '#f1eef6';
+			} else if (d <= breaks[2]) {
+				return '#bdc9e1';
+			} else if (d <= breaks[3]) {
+				return '#74a9cf';
+			} else if (d <= breaks[4]) {
+				return '#2b8cbe'
+			} else if (d <= breaks[5]) {
+				return '#045a8d'
+			}
+		}
 
 
 		function getClassBreaks() {
 
-				var values = [];
-				dataLayer.eachLayer(function (layer) {
-					var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
-					 if(value) { values.push(value); }
-					
-				});
-			
-				
-				var breaks = ss.jenks(values, 5);
-				
-				return breaks;
-			}
-		
-		
+			var values = []; //empty array will hold entire range of values
+			//loop through all features and get values in JSON
+			dataLayer.eachLayer(function (layer) {
+				var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
+
+				//use native javascript push method to put what we calculated into our "values" array
+				if (value) {
+					values.push(value);
+				}
+
+			});
+
+			var breaks = ss.jenks(values, 5);
+
+			return breaks;
+		}
+
+
 		function drawLegend(breaks) {
 
 			var legend = L.control({
@@ -204,14 +206,15 @@
 				div.innerHTML = "<h3>" + "% Population with Disability <br>" + "</h3>";
 
 				//loop through breaks array
-				for (var i = 0; i < breaks.length - 1; i++) {
+				for (var i = 1; i < breaks.length; i++) {
 
 					//create variable 'color' and assign return result of getColor
 					var color = getColor(breaks[i], breaks);
 					div.innerHTML +=
 						'<span style="background:' + color + '"></span> ' +
-						'<label>' + (breaks[i-1] * 100).toLocaleString() + ' &mdash; ' +
+						'<label>' + (breaks[i - 1] * 100).toLocaleString() + ' &mdash; ' +
 						(breaks[i] * 100).toLocaleString() + '</label>';
+					//console.log(breaks);
 				}
 
 				return div;
