@@ -13,6 +13,8 @@
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 
+	
+
 	<style>
 		body {
 			margin: 0;
@@ -128,10 +130,12 @@
 		<h2>by County</h2>
 	</header>
 
+	<!--	create div element for dropdown menu with options-->
 	<div id='ui-controls'>
 		<label>Choose a data attribute:</label>
 		<select id="vacant">
-			<option value="VACANT_FOR" selected>vacant for rent</option>
+			<option value="VACANT_FOR" selected>vacant for rent</option> 
+			<!--include 'selected' to indicate which option is initially selected in our menu-->
 			<option value="VACANT_REN">vacant rented but not occupied</option>
 			<option value="VACANT_SEA" >vacant units for seasonal or recreational use only</option>
 			<option value="VACANT_FO2">vacant for sale</option>
@@ -148,6 +152,8 @@
 	</footer>
 
 	<script>
+		
+		//declare global variable 'labels' to associate vacant housing data with meaningful names
 		var labels = {
 			"VACANT":"vacant units",
 			"VACANT_FOR": "% vacant housing units for rent",
@@ -157,24 +163,30 @@
 			"VACANT_SOL": "% vacant housing units sold but not occupied"
 			
 		}
+		
+		//set up map options
 		var options = {
 			center: [38.2, -85.8],
 			zoom: 7.4,
 			minZoom: 7.4,
 			maxZoom: 7.4,
-			dragging: false,
-			zoomControl: false
+			dragging: false, //disable draggable map
+			zoomControl: false //disable zoom control
 		}
+		//create leaflet map and pass options 
 		var map = L.map('map', options);
 
-		
+		//declare global variable 'dataLayer' which later has Leaflet GeoJson layer assigned to it
+		var dataLayer, 
+			attribute = "VACANT_FOR", //global variable storing reference to GeoJSON data attribute we are going to map
+			norm = "VACANT"; //global variable assigning another attribute we will use to normalize data with
 
-		var dataLayer,
-			attribute = "VACANT_FOR",
-			norm = "VACANT";
-
+		//use JQuery getJSON() method like we access leaflet methods and pass two arguments
+		//first argument is a string with the file url
+		//second argument is callback function that executes after data loads
 		$.getJSON("ky_counties_housing.json", function (data) {
 
+			//crate Leaflet GeoJson layer, style layer, and add to the map assign Leaflet layer to variable dataLayer
 			dataLayer = L.geoJson(data, {
 				style: function (feature) {
 					return {
@@ -187,19 +199,21 @@
 				}
 			}).addTo(map);
 
-			drawLegend();
-			drawMap();
-			//buildUI();
-			drawInfo();
+			drawLegend(); //call drawLegend function to draw legend and add class rangesCha-Ching!
+			drawMap();	//call drawMap function	which loops through all the layers and updates fill color
+			drawInfo(); //call drawInfo function 
 
 		});
 
+		//create function to loop through layers set color add popups and other ux functions 
 		function drawMap() {
-
+			
+			//declare variable and assign getClassBreaks function
 			var breaks = getClassBreaks();
-
+			
+			//loop through each layer to handle interaction and color map
 			dataLayer.eachLayer(function (layer) {
-
+				
 				layer.on('mouseover', function () {
 					updateInfo(this);
 					
@@ -208,7 +222,7 @@
 					weight: 3});
 				
 				});
-				
+				//add event listener and call updateInfo function to display info panel
 				layer.on('mouseout', function () {
 					updateInfo(this);
 					
@@ -238,27 +252,38 @@
 			})
 
 			updateLegend(breaks);
-		}
+			
+		}//end drawMap function
 
+		
+		//function to find classification breaks
 		function getClassBreaks() {
-
+			//declare variable and assign empty array that will hold the range of values
 			var values = [];
-
+			
+			//loop through all layers and access values in data
 			dataLayer.eachLayer(function (layer) {
+				//declare 'value' variable and assign calculation to normalize data
 				var value = layer.feature.properties[attribute] / layer.feature.properties[norm];
+				// use FavaScript push() method to push the calculated value up to the 'values' array
 				values.push(value);
 			});
-
+			
+			//use simple statistics to determine clusters - 5 classification breaks
 			var clusters = ss.ckmeans(values, 5);
-
+			
+			//create an array of the lowest and highest value in each cluster
+				//we know the the first element of each cluster is cluster[0]
+				//use JavaScript method pop() to append the second ellment to the new array
 			var breaks = clusters.map(function (cluster) {
 				return [cluster[0], cluster.pop()];
 			});
+			return breaks;//return array of breaks
 
-			return breaks;
+		}//end of class breaks function
 
-		}
-
+		
+		//function accepts calculated falue and breaks and assigns color with if/else statements 
 		function getColor(d, breaks) {
 
 			if (d <= breaks[0][1]) {
@@ -272,24 +297,33 @@
 			} else if (d <= breaks[4][1]) {
 				return '#045a8d'
 			}
-		}
-
+		}//end getColor function
+		
+		
+		//create function to build legend
+		//declare empty function
 		function drawLegend() {
-
+			
+			//create variable to reverence a leaflet control object and pass an argument to position
 			var legend = L.control({
 				position: 'topleft'
 			});
-
+			//leaflet .onAdd function holds HTML elements to build legend information
 			legend.onAdd = function (map) {
-
+				//create 'div' variable and assign leaflet method DomUtil to create a new div with class name legend
 				var div = L.DomUtil.create('div', 'legend');
-
+				
+				//return the div to be added to the map
 				return div;
 
 			};
-
+			
+			//add legend to map
 			legend.addTo(map);
-		}
+		}//end drawLegend function
+		
+		
+		
 		$('select[id="vacant"]').change(function () {
 
 			attribute = $(this).val();
@@ -344,6 +378,16 @@
 			$(".info").html(html);
 		}
 		
+		//create variable bounds and assign an array of 2 arrays with the x,y bounds of the rectangle
+		var bounds = [[35, -81], [40, -92]];
+
+		//create rectangle to serve as map background
+  		L.rectangle(bounds, { weight: 1.0, color:'#95a5a6' , fill:"True" }).addTo(map);
+ 
+
+// zoom the map to the rectangle bounds
+
+
 
 	</script>
 
