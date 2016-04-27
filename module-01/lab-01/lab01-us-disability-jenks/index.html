@@ -206,14 +206,14 @@
 				div.innerHTML = "<h3>" + "% Population with Disability <br>" + "</h3>";
 
 				//loop through breaks array
-				for (var i = 1; i < breaks.length; i++) {
+				for (var i = 0; i < breaks.length-1; i++) {
 
 					//create variable 'color' and assign return result of getColor
-					var color = getColor(breaks[i], breaks);
+					var color = getColor(breaks[i+1], breaks);
 					div.innerHTML +=
 						'<span style="background:' + color + '"></span> ' +
-						'<label>' + (breaks[i - 1] * 100).toLocaleString() + ' &mdash; ' +
-						(breaks[i] * 100).toLocaleString() + '</label>';
+						'<label>' + (breaks[i] * 100).toLocaleString() + ' &mdash; ' +
+						(breaks[i+1] * 100).toLocaleString() + '</label>';
 					//console.log(breaks);
 				}
 
