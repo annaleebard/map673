@@ -147,7 +147,7 @@
 	<footer>
 		<p>Map authored by Anna Bard</p>
 		<p>Expanding the User Experience</p>
-		<p>Lorem i
+		<p>Kentucky vacant housing data.
 		</p>
 	</footer>
 
@@ -214,9 +214,10 @@
 			//loop through each layer to handle interaction and color map
 			dataLayer.eachLayer(function (layer) {
 				
+				//add event listener and call updateInfo function to update info panel
 				layer.on('mouseover', function () {
 					updateInfo(this);
-					
+				//	
 				layer.setStyle({
 					color: 'yellow',
 					weight: 3});
@@ -231,19 +232,20 @@
 				})
 					
 				});
-				
+				//declare variable to simplify popup code
 				var props = layer.feature.properties;
 
 				layer.setStyle({
 					fillColor: getColor(props[attribute] /
 						props[norm], breaks)
 				});
+				
 				layer.bindPopup("<b>" + props["NAME"] + " County</b></br>" +
 					labels[attribute] + ": " + ((props[attribute] /
 						props[norm]) * 100).toLocaleString());
 				
 			});
-
+			
 			dataLayer.on('mouseover', function () {
 				$(".info").show();
 			});
@@ -391,7 +393,7 @@
 		}
 		
 		//create variable bounds and assign an array of 2 arrays with the x,y bounds of the rectangle
-		var bounds = [[35, -81], [40, -92]];
+		var bounds = [[30, -75], [40, -92]];
 
 		//create rectangle to serve as map background
   		L.rectangle(bounds, { weight: 1.0, color:'#4d4d00' , fill:"True" }).addTo(map);
