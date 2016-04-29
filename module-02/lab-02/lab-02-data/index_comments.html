@@ -216,13 +216,16 @@
 				
 				//add event listener and call updateInfo function to update info panel
 				layer.on('mouseover', function () {
+					
 					updateInfo(this);
+					
 				//	
 				layer.setStyle({
 					color: 'yellow',
 					weight: 3});
 				
 				});
+				
 				//add event listener and call updateInfo function to display info panel
 				layer.on('mouseout', function () {
 					updateInfo(this);
@@ -329,7 +332,7 @@
 		$('select[id="vacant"]').change(function () {
 			
 			//select 'this' or the selected form element and return the value of the selected option
-			//reassign 'attribute' variable 
+			//reassign 'attribute' variable (this is the context of the event)
 			attribute = $(this).val();
 			drawMap();//call draw map function to redraw with selected option
 
