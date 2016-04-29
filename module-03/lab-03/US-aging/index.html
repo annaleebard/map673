@@ -40,6 +40,19 @@
 			border-radius: 5px;
 		}
 		
+		h2 {
+			position: absolute;
+			z-index: 100;
+			top: 100px;
+			left: 100px;
+			padding: 15px 20px;
+			margin: 0;
+			color: whitesmoke;
+			font-size: .8em;
+			background: rgba(25, 25, 25, 0.8);
+			border-radius: 5px;
+		}
+		
 		#map {
 			position: absolute;
 			width: 100%;
@@ -111,12 +124,12 @@
 		}
 		
 		.info {
-			padding: 6px 8px;
-			font-size: 1em;
+			padding: 8px 15px 8px 15px;
+			font-size: 1.5em;
 			background: rgba(75, 75, 75, 0.8);
 			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 			border-radius: 5px;
-			text-align:center;
+			text-align: center;
 			color: whitesmoke;
 		}
 		
@@ -129,14 +142,16 @@
 
 <body>
 	<h1>United States Aging Projection</h1>
-	
+	<h2>Data Source: http://www.coopercenter.org
+		</h2>
+
 	<div id="ui-controls">
 		<label><span class="min">2010</span><span class="max">2040</span>
 			<input type="range" min="2010" , max="2040" , value="2010" , step="10" , class="year-slider"></input>
 		</label>
 	</div>
 	<div id='map'></div>
-  
+
 	<script>
 		// instantiate the Leaflet map
 		var options = {
@@ -161,16 +176,16 @@
 		// declare global variables
 
 		var dataLayer;
-		var attribute = 2001
+		var attribute = 2010
 
 		// AJAX requests to load data files
 		$.getJSON('us-states.json', function (states) {
 
-			Papa.parse('US_age_projection.csv', {
+			Papa.parse('aging_US1.csv', {
 				download: true,
 				header: true,
 				complete: function (data) {
-console.log(data);
+					
 					processData(states, data);
 				}
 			})
@@ -209,18 +224,18 @@ console.log(data);
 				style: function (feature) {
 
 					return {
-						color: 'white',
-						weight: 2,
+						color: 'black',
+						weight: 2.5,
 						fillOpacity: 1,
 						fillColor: 'black'
 					}
 				}
-			
-                    
+
+
 
 			}).addTo(map)
-			
-			
+
+
 
 			updateMap()
 		}
@@ -231,42 +246,46 @@ console.log(data);
 			var breaks = getClassBreaks();
 
 			dataLayer.eachLayer(function (layer) {
-
+				
 				layer.setStyle({
 					fillColor: getColor(Number(layer.feature.properties[attribute]), breaks)
 				})
 				var props = layer.feature.properties;
-                        console.log(props);
-                layer.setStyle({
-                    fillColor: getColor(Number(props[attribute]), breaks)
-                });
-              
-                        //create popup with each county data attribute and name
-                    layer.bindPopup("<b>" +layer.feature.properties['State_Name'] + " </b></br>" +
-                    attribute + ":  " +
-                    ((props[attribute])).toLocaleString()+"%")
-                
-                        // call updateInfo function and add even listener to dataLayer
-                    layer.on('mouseover', function() {
-                    updateInfo(this);
-                    
-                        //set outline of county to yellow when moused over
-                    layer.setStyle({color: '#FFFF00'}).bringToFront(); 
-                });
-                
-                        //shows infobox when county moused over
-                    layer.on('mouseover', function() {
-                $(".info").show();
-                });
-                
-                        //hides infobox when mouseout from county
-                    layer.on('mouseout', function() {
-                $(".info").hide();  
-                    
-                        //reset county outline to black when mousedout
-                    layer.setStyle({color: 'whitesmoke'});
-                });
 				
+				layer.setStyle({
+					fillColor: getColor(Number(props[attribute]), breaks)
+				});
+
+				//create popup with each county data attribute and name
+				layer.bindPopup("<b>" + layer.feature.properties['State_Name'] + " </b></br>" +
+					attribute + ":  " +
+					((props[attribute])) + "%")
+
+				// call updateInfo function and add even listener to dataLayer
+				layer.on('mouseover', function () {
+					updateInfo(this);
+
+					//set outline of county to yellow when moused over
+					layer.setStyle({
+						color: '#FFFF00'
+					}).bringToFront();
+				});
+
+				//shows infobox when county moused over
+				layer.on('mouseover', function () {
+					$(".info").show();
+				});
+
+				//hides infobox when mouseout from county
+				layer.on('mouseout', function () {
+					$(".info").hide();
+
+					//reset county outline to black when mousedout
+					layer.setStyle({
+						color: 'black'
+					});
+				});
+
 			});
 			updateLegend(breaks);
 		}
@@ -285,10 +304,10 @@ console.log(data);
 			values.sort(function (a, b) {
 				return a - b;
 			});
-			
+
 
 			var breaks = ss.quantile(values, [0, 0.2, 0.4, 0.6, 0.8, 1]);
-			
+
 			return breaks;
 		}
 
@@ -331,7 +350,7 @@ console.log(data);
 		// function to update the legend
 		function updateLegend(breaks) {
 			//select the legend then add title to it
-			var legend = $('.legend').html("<h3>" + "% Unemployment in " + attribute + "</h3><ul>");
+			var legend = $('.legend').html("<h3>" + "% Population 65+ " + attribute + "</h3><ul>");
 			//loop through the array of break values
 			for (var i = 0; i < breaks.length - 1; i++) {
 
@@ -378,42 +397,44 @@ console.log(data);
 			sliderControl.addTo(map);
 
 			$(".year-slider")
-			.on("input change", function (){
-			
-			attribute = ($(this).val());
-				updateMap();
-		})
+				.on("input change", function () {
+
+					attribute = ($(this).val());
+					updateMap();
+				})
 		}
 
-		 function drawInfo() { //function to create infobox..empty one
-        
-        
-        var info = L.control({position: 'bottomright'}); 
-        
-        
-        info.onAdd = function(map) { //add to map
-            
-            var div = L.DomUtil.create('div','info');//giving div element a class of info
-            
-            return div; //return to add to map
-        }
-        
-        
-        info.addTo(map);
-    }
-		       
- function updateInfo(layer) {
-        var props = layer.feature.properties;
-        console.log(props);
-        // create meaningful labels for info box in updateinfo function to update as moused over/out
-        var html = "<h3>"+layer.feature.properties['State_Name']+" </h3>"+
-                    
-                    "2010: <b>"+ props[2001]+"%</b><br>"+
-                    "2020: <b>"+ props[2002]+"%</b><br>"+
-                    "2030: <b>"+ props[2003]+"%</b><br>"+
-                    "2040: <b>"+ props[2013]+"%</b>"
-        $(".info").html(html);
-    }
+		function drawInfo() { //function to create infobox..empty one
+
+
+			var info = L.control({
+				position: 'bottomright'
+			});
+
+
+			info.onAdd = function (map) { //add to map
+
+				var div = L.DomUtil.create('div', 'info'); //giving div element a class of info
+
+				return div; //return to add to map
+			}
+
+
+			info.addTo(map);
+		}
+
+		function updateInfo(layer) {
+			var props = layer.feature.properties;
+
+			// create meaningful labels for info box in updateinfo function to update as moused over/out
+			var html = "<h3>" + layer.feature.properties['State_Name'] + " </h3>" +
+
+				"2010: <b>" + props[2010] + "%</b><br>" +
+				"2020: <b>" + props[2020] + "%</b><br>" +
+				"2030: <b>" + props[2030] + "%</b><br>" +
+				"2040: <b>" + props[2040] + "%</b>"
+			$(".info").html(html);
+		}
 	</script>
 
 </body>

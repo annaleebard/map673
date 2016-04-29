@@ -1,11 +1,11 @@
 STATE_FIP,State_Name,2010,2020,2030,2040
-1,Alabama,14,16,19,19
-2,Alaska,8,13,16,15
-4,Arizona,14,16,19,19
-5,Arkansas,14,17,19,19
-6,California,11,14,16,16
-8,Colorado,11,14,16,15
-9,Connecticut,14,17,20,20
+01,Alabama,14,16,19,19
+02,Alaska,8,13,16,15
+04,Arizona,14,16,19,19
+05,Arkansas,14,17,19,19
+06,California,11,14,16,16
+08,Colorado,11,14,16,15
+09,Connecticut,14,17,20,20
 10,Delaware,14,18,21,21
 11,District of Columbia,11,13,14,13
 12,Florida,17,20,23,23
