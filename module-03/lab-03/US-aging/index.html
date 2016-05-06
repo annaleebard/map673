@@ -124,8 +124,8 @@
 		}
 		
 		.info {
-			padding: 8px 15px 8px 15px;
-			font-size: 1.5em;
+			padding: 2px 15px 8px 15px;
+			font-size: 1.3em;
 			background: rgba(75, 75, 75, 0.8);
 			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 			border-radius: 5px;
@@ -250,11 +250,9 @@
 				layer.setStyle({
 					fillColor: getColor(Number(layer.feature.properties[attribute]), breaks)
 				})
-				var props = layer.feature.properties;
 				
-				layer.setStyle({
-					fillColor: getColor(Number(props[attribute]), breaks)
-				});
+				var props = layer.feature.properties;
+		
 
 				//create popup with each county data attribute and name
 				layer.bindPopup("<b>" + layer.feature.properties['State_Name'] + " </b></br>" +
@@ -267,8 +265,12 @@
 
 					//set outline of county to yellow when moused over
 					layer.setStyle({
-						color: '#FFFF00'
+						color: 'yellow',
+						weight: 6,
+						
+						
 					}).bringToFront();
+						
 				});
 
 				//shows infobox when county moused over
@@ -282,7 +284,9 @@
 
 					//reset county outline to black when mousedout
 					layer.setStyle({
-						color: 'black'
+						color: 'black',
+						weight:2,
+						
 					});
 				});
 
@@ -356,7 +360,7 @@
 
 				//get color for each
 				var color = getColor(breaks[i + 1], breaks);
-
+console.log(breaks);
 				//append a list item to the legend
 				legend.append('<li><span style="background:' + color + '"></span> ' +
 
