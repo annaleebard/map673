@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=1024, user-scalable=no">
+
+	<title>Kenya Gender and HIV</title>
+
+	<!-- Required stylesheet -->
+	<link rel="stylesheet" media="screen" href="core/deck.core.css">
+
+	<!-- Extension CSS files go here. Remove or add as needed. -->
+	<link rel="stylesheet" media="screen" href="extensions/goto/deck.goto.css">
+	<link rel="stylesheet" media="screen" href="extensions/menu/deck.menu.css">
+	<link rel="stylesheet" media="screen" href="extensions/navigation/deck.navigation.css">
+	<link rel="stylesheet" media="screen" href="extensions/status/deck.status.css">
+	<link rel="stylesheet" media="screen" href="extensions/scale/deck.scale.css">
+
+	<!-- Style theme. More available in /themes/style/ or create your own. -->
+	<link rel="stylesheet" media="screen" href="themes/style/swiss.css">
+
+	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
+	<link rel="stylesheet" media="screen" href="themes/transition/horizontal-slide.css">
+
+	<!-- Basic black and white print styles -->
+	<link rel="stylesheet" media="print" href="core/print.css">
+
+	<!-- Required Modernizr file -->
+	<script src="modernizr.custom.js"></script>
+</head>
+
+<body>
+	<div class="deck-container">
+
+		<!-- Begin slides. Just make elements with a class of slide. -->
+
+		<section class="slide">
+			<!--			<img src="http://www.enchantedlearning.com/africa/kenya/mapquiz/mapbwmall.GIF" alt="Kenya">-->
+			<h1>Kenyan HIV Prevelance by Gender</h1>
+			<h4> </h4>
+		</section>
+		<section class="slide">
+			<h2>Why are you making this product? </h2>
+			<p>The HIV pandemic is most severe in sub-Sahara Africa. The World Health Organization estimates that Africa is home to three out of four HIV related deaths in 2014. African women remain at a much higher risk of infection and HIV remains the leading cause of death of women of the reproductive age. Still, women are not receiving life-saving services, antiretroviral treatment, testing, and education. Planning for delivery of services is an immense task and African countries are often employing global or regional data in service development and deployment. There are local trends in HIV infection that, once visualized, can maximize the benefit of services provided.</p>
+			<p>Of 54 African countries Kenya ranks 11th in HIV prevalence. Kenya’s Open Data Portal houses collections of data stretching across many themes and provided in easily accessible data structures. Web searches have yielded several static maps of HIV related data in Kenya. However, the gender disparities of HIV infection have not been highlighted in the maps discovered. Kenya’s data portal provides a “Gender based HIV prevalence per county” data set I will use to explore Kenya’s local environment of HIV prevalence and gender. The goal of this project is to visualize, via interactive web-map, HIV occurrence by gender and Kenyan county. </p>
+		</section>
+
+		<section class="slide">
+			<h2>What do we want to get out of this product? </h2>
+			<p>A simple and meaningful representation of data which presents the data’s magnitude visually and allows user driven interaction to retrieve more detailed statistics.</p>
+			<h2>What do our users want to get out of this product? </h2>
+			<ul>
+				<li>
+
+					<p>Gain knowledge about distribution of HIV prevalence of adults (age 15+) across Kenya</p>
+				</li>
+				<li>
+					<p>Understand the local trends of HIV incidence and the variations between genders of the infected population</p>
+				</li>
+				<li>
+					<p>Learn where the gender gap is most prevalent to begin discussion of possible causes of the disparity as well as possible solutions </p>
+				</li>
+				<li>
+					<p>See where women are most disproportionately affected by HIV in order to plan for allocation of services and treatment</p>
+				</li>
+
+				…
+				<ul>
+		</section>
+
+		<section class="slide">
+
+
+			<h2>Content requirements:</h2>
+			<ul>
+				<li>
+
+					<p>Data displayed on basemap which includes Kenyan Counties and the immediately surrounding area</p>
+				</li>
+				<li>
+					<p>Multiple data layers to represent percent of male and female population with HIV </p>
+				</li>
+				<li>
+					<p>Detailed population and HIV infection data provided upon user interaction  </p>
+				</li>
+				<li>
+					<p>Link pointed to the Kenya Open Data Portal to retrieve, verify, and explore data used in this visualization </p>
+				</li>
+				<li>
+					<p>Button to download the data directly to user’s local computer? </p>
+				</li>
+				<li>
+					<p>Information or simple link to donate to services? </p>
+				</li>
+
+				<ul>
+		</section>
+				<section class="slide">
+
+
+			<h2>Functional specifications: </h2>
+			<ul>
+				<li>
+
+					<p>Data layers tiled and drawn on a map in a web browser</p>
+				</li>
+				<li>
+					<p>Ability to zoom in selected area manually with scroll or click </p>
+				</li>
+				<li>
+					<p>Highlight selected feature on user hover   </p>
+				</li>
+				<li>
+					<p>Additional information provided in popup or info panel on user click or hover </p>
+				</li>
+				
+
+				<ul>
+		</section>
+
+
+		<!-- End slides. -->
+
+		<!-- Begin extension snippets. Add or remove as needed. -->
+
+		<!-- deck.navigation snippet -->
+		<div aria-role="navigation">
+			<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+			<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+		</div>
+
+		<!-- deck.status snippet -->
+		<p class="deck-status" aria-role="status">
+			<span class="deck-status-current"></span> /
+			<span class="deck-status-total"></span>
+		</p>
+
+		<!-- deck.goto snippet -->
+		<form action="." method="get" class="goto-form">
+			<label for="goto-slide">Go to slide:</label>
+			<input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+			<datalist id="goto-datalist"></datalist>
+			<input type="submit" value="Go">
+		</form>
+
+		<!-- End extension snippets. -->
+	</div>
+
+	<!-- Required JS files. -->
+	<script src="jquery.min.js"></script>
+	<script src="core/deck.core.js"></script>
+
+	<!-- Extension JS files. Add or remove as needed. -->
+	<script src="extensions/menu/deck.menu.js"></script>
+	<script src="extensions/goto/deck.goto.js"></script>
+	<script src="extensions/status/deck.status.js"></script>
+	<script src="extensions/navigation/deck.navigation.js"></script>
+	<script src="extensions/scale/deck.scale.js"></script>
+
+	<!-- Initialize the deck. You can put this in an external file if desired. -->
+	<script>
+		$(function () {
+			$.deck('.slide');
+		});
+	</script>
+</body>
+
+</html>
