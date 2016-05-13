@@ -51,8 +51,6 @@
 		#info {
 			position: absolute;
 			max-width: 200px;
-			right: 15px;
-			top: 15px;
 			display: none;
 			background: whitesmoke;
 			border: 2px solid #d3d3d3;
@@ -129,6 +127,7 @@
 				pointToLayer: function (feature, latlng) {
 					return L.circleMarker(latlng, {
 						color: '#6E77B0',
+						fillColor: 'yellow',
 						opacity: 1,
 						weight: 2,
 						fillOpacity: 0,
@@ -139,7 +138,6 @@
 
 			updateSymbols(girls, boys, 1);
 			sequenceUI(girls, boys);
-			infoWindow(girls, boys)
 
 		}
 
@@ -158,8 +156,9 @@
 				layer.setRadius(radius)
 				allRadii.push(radius)
 			});
-			console.log(allRadii);
+
 			drawLegend(allRadii);
+			infoWindow(girls, boys, currentGrade);
 		}
 
 		function calcRadius(val) {
@@ -203,29 +202,50 @@
 
 			legend.html(svgCircles)
 		}
-function infoWindow() {
 
-    var info = $('#info');
+		function infoWindow(girls, boys, currentGrade) {
 
-    boys.on('mouseover', function(e) {
-    var props = e.layer.feature.properties;
-       info.show();
-        $('#info span').text(props.COUNTY);
-        $(".girls span:first-child").text('(grade '+String(currentGrade)+')');
-        $(".boys span:first-child").text('(grade '+String(currentGrade)+')');
+			var info = $('#info');
 
-        $(".girls span:last-child").text(props['G'+String(currentGrade)].toLocaleString());
-        $(".boys span:last-child").text(props['B'+String(currentGrade)].toLocaleString());
+			boys.on('mouseover', function (e) {
 
-        e.layer.setStyle({ fillOpacity: .6 });
+				var props = e.layer.feature.properties;
 
-    });
+				info.show();
+				$('#info p:first-child span').text(props.COUNTY);
+				$('.girls span:first-child').text('(grade ' + currentGrade + ')');
+				$('.boys span:first-child').text('(grade ' + currentGrade + ')');
 
-    boys.on('mouseout', function(e) {
-        info.hide();
-        e.layer.setStyle({ fillOpacity: 0 });
-    });
-}
+				$('.girls span:last-child').text(props['G' + String(currentGrade)].toLocaleString());
+				$('.boys span:last-child').text(props['B' + String(currentGrade)].toLocaleString());
+
+				e.layer.setStyle({
+					fillOpacity: .4
+				});
+
+			});
+
+			boys.on('mouseout', function (e) {
+				info.hide();
+				e.layer.setStyle({
+					fillOpacity: 0
+				});
+			});
+
+
+			$(document).mousemove(function (e) {
+				info.css({ "left": e.pageX + 6, "top": e.pageY - info.height() -15});
+					
+					if(info.offset().top  < 4){
+					info.css({"top": e.pageY +15})
+				}
+				if(info.offset().left +info.width() >= $(window).width()-40) {
+					info.css({"left": e.pageX - info.width()-30})
+				}
+			});
+
+
+		}
 	</script>
 </body>
 
