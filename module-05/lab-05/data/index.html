@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<title>A simple map</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/1.0.1/simple_statistics.js'></script>
+	<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+	<script src='https://code.jquery.com/jquery-1.12.0.min.js'></script>
+
+	<link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
+	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: "Montserrat"
+		}
+		
+		#side-panel {
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 33%;
+			background: green;
+			font-size: 1em
+		}
+		
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+			width: 67%;
+			right: 0px
+		}
+		
+		#download span {
+			font-size: 1.3em;
+			font-weight: 500;
+		}
+		
+		#download {
+			position: absolute;
+			bottom: 20px;
+			left: 36%;
+			padding: 6px 15px 8px;
+			border: 3px solid #2c3e50;
+			border-radius: 5px;
+			color: #2c3e50;
+			font-size: 1em;
+		}
+		
+		#legend {
+			position: absolute;
+			right: 15px;
+			bottom: 20px;
+			padding: 8px 15px;
+			background: whitesmoke;
+			border: 3px solid #2c3e50;
+			border-radius: 5px;
+			color: #2c3e50;
+			width: 160px;
+			height: 225px;
+		}
+		
+		#legend h3 {
+			text-align: right;
+			font-weight: 500;
+			margin: 10px 0 20px;
+			color: #2c3e50
+		}
+		
+		#info {
+			padding: 8px 15px;
+			background: whitesmoke;
+			border: 3px solid #2c3e50;
+			border-radius: 5px;
+			color: #2c3e50;
+			position: absolute;
+			font-size: 1em;
+			max-width: 220px;
+		}
+		
+		#info p {
+			margin: 3px 0 4px;
+		}
+		
+		.women {
+			color: #D96D02;
+		}
+		
+		.men {
+			color: #2c3e50;
+		}
+		
+		#info span:last-child {
+			font-size: 1.3em;
+			font-weight: 500;
+		}
+		
+		#side-panel {
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 33%;
+			background: whitesmoke;
+			border-right: 2px solid #2c3e50;
+			overflow-y: scroll;
+		}
+		
+		h1 {
+			padding: 8px 25px 8px 15px;
+			margin: 0;
+			background: #2c3e50;
+			color: whitesmoke;
+			font-weight: 400;
+			font-size: 1.5em;
+			text-align: left;
+		}
+		
+		h2 {
+			margin: 0;
+			padding: 8px 25px 8px 15px;
+			color: #2c3e50;
+			font-weight: 500;
+			font-size: 1.2em;
+			text-align: left;
+		}
+		
+		#side-panel p {
+			margin: 8px 0 4px;
+			padding: 0 25px 0 15px;
+			color: #3d3d3d;
+			text-align: left;
+			font-size: 1em;
+		}
+		
+		#side-panel p:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+		
+		#side-panel img {
+			float: right;
+			margin: 0 0 15px 15px;
+		}
+		
+		#download {
+			margin: 0 0 5px 5px;
+			padding: 0 5px 0 5px;
+			background: whitesmoke;
+		}
+		
+		a {
+			color: #2c3e50;
+			text-decoration: none;
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id='map'></div>
+	<div id='side-panel'>
+		<h1>Kenya's HIV infection rate by gender</h1>
+		<h2>2014 enrollment rates for boys and girls</h2>
+		<p>The HIV pandemic is most severe in sub-Sahara Africa. The World Health Organization estimates that Africa is home to three out of four HIV related deaths in 2014. African women remain at a much higher risk of infection and HIV remains the leading cause of death of women of the reproductive age. Still, women are not receiving life-saving services, antiretroviral treatment, testing, or education. Planning for delivery of services is an immense task and African countries are often employing global or regional data in service development and deployment. There are local trends in HIV infection that, once visualized, can maximize the benefit of services provided.
+		</p>
+		<!--<p><img src="images/legend.png" alt="legend"></p>-->
+		<p></p>
+		<h2>About this map</h2>
+		<p>This map visualizes HIV occurrence by gender and Kenyan county.</p>
+		<h2>About the data</h2>
+		<p> Kenya’s Open Data Portal houses collections of data stretching across many themes and provided in easily accessible data structures. Kenya’s data portal provides a “Gender based HIV prevalence per county” dataset. </p>
+	</div>
+	<div id='ui-slider'>
+		<input type="range" min="1" value="1" max="8" step="1" class="slider">
+	</div>
+	<div id="download">
+		<p><a href="Kenya_HIV_Gender.csv" download="Kenya_HIV_2014.csv">Download Data</a>
+		</p>
+	</div>
+	<!--
+	<div id="legend">
+		<h3>2014 HIV Infection Rates by County</h3>
+		<svg class="legend" width="200" height="200"></svg>
+	</div>
+-->
+	<div id="info">
+		<p>County: <span></span>
+		</p>
+		<p class="women">Female <span></span>: <span></span>
+		</p>
+		<p class="men">Male <span></span>: <span></span>
+		</p>
+	</div>
+
+
+	<script>
+		L.mapbox.accessToken = 'pk.eyJ1Ijoicmdkb25vaHVlIiwiYSI6Im5Ua3F4UzgifQ.PClcVzU5OUj17kuxqsY_Dg';
+
+		var map = L.mapbox.map('map', 'mapbox.light', {
+			center: [-.23, 37.8],
+			zoom: 7,
+			minZoom: 7,
+			maxZoom: 8,
+			maxBounds: L.latLngBounds([-6.22, 27.72], [5.76, 47.83])
+		});
+
+		$.getJSON("health_spending_county.json", function(data) {
+    L.geoJson(data).addTo(map);
+});
+		var scaleFactor = .6;
+
+		omnivore.csv('Kenya_HIV_Gender.csv')
+			.on('ready', function (e) {
+				drawMap(e.target.toGeoJSON());
+				// when this is fired, the layer
+				// is done being initialized
+			})
+			.on('error', function (e) {
+				// fired if the layer can't be loaded over AJAX
+				// or can't be parsed
+			})
+
+
+		function drawMap(hivData) {
+			var women = L.geoJson(hivData, {
+				pointToLayer: function (feature, latlng) {
+					return L.circleMarker(latlng, {
+						color: '#e67e22',
+						opacity: 1,
+						weight: 2.5,
+						fillOpacity: 0,
+
+
+					});
+				}
+			}).addTo(map);
+
+			var men = L.geoJson(hivData, {
+				pointToLayer: function (feature, latlng) {
+					return L.circleMarker(latlng, {
+						color: '#2c3e50',
+						fillColor: '#2c3e50',
+						opacity: 1,
+						weight: 2.5,
+						fillOpacity: 0,
+
+					});
+				}
+			}).addTo(map);
+
+			updateSymbols(women, men, 1);
+			//			sequenceUI(women, men);
+
+		}
+
+		function updateSymbols(women, men) {
+
+			var allRadii = [];
+			var radius;
+
+			women.eachLayer(function (layer) {
+				radius = calcRadius(layer.feature.properties.wom_hiv);
+				layer.setRadius(radius)
+				allRadii.push(radius)
+
+			});
+			men.eachLayer(function (layer) {
+				radius = calcRadius(layer.feature.properties.men_hiv);
+				layer.setRadius(radius)
+				allRadii.push(radius)
+			});
+
+			//drawLegend(allRadii);
+			infoWindow(women, men);
+		}
+
+		function calcRadius(val) {
+			var radius = Math.sqrt(val / Math.PI);
+			return radius * 14;
+		}
+
+		function infoWindow(women, men) {
+
+			var info = $('#info');
+
+			men.on('mouseover', function (e) {
+
+				var props = e.layer.feature.properties;
+				console.log(props);
+				info.show();
+				$('#info p:first-child span').text(props.COUNTY);
+				$('.women span:first-child').text('HIV rate ');
+				$('.men span:first-child').text('HIV rate ');
+
+				$('.women span:last-child').text(props['wom_hiv'] + "%");
+				$('.men span:last-child').text(props['men_hiv'] + "%");
+
+				e.layer.setStyle({
+					fillOpacity: .4
+				});
+
+			});
+
+			men.on('mouseout', function (e) {
+				info.hide();
+				e.layer.setStyle({
+					fillOpacity: 0
+				});
+			});
+
+			women.on('mouseover', function (e) {
+
+				var props = e.layer.feature.properties;
+				console.log(props);
+				info.show();
+				$('#info p:first-child span').text(props.COUNTY);
+				$('.women span:first-child').text('HIV rate ');
+				$('.men span:first-child').text('HIV rate ');
+
+				$('.women span:last-child').text(props['wom_hiv'] + "%");
+				$('.men span:last-child').text(props['men_hiv'] + "%");
+
+				e.layer.setStyle({
+					fillOpacity: .4
+				});
+
+			});
+
+			women.on('mouseout', function (e) {
+				info.hide();
+				e.layer.setStyle({
+					fillOpacity: 0
+				});
+			});
+
+
+			$(document).mousemove(function (e) {
+				info.css({
+					"left": e.pageX + 6,
+					"top": e.pageY - info.height() - 15
+				});
+
+				if (info.offset().top < 4) {
+					info.css({
+						"top": e.pageY + 15
+					})
+				}
+				if (info.offset().left + info.width() >= $(window).width() - 40) {
+					info.css({
+						"left": e.pageX - info.width() - 30
+					})
+				}
+			});
+
+
+		}
+	</script>
+</body>
+
+
+</html>
