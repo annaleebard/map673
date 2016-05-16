@@ -49,9 +49,9 @@
 			bottom: 20px;
 			left: 36%;
 			padding: 6px 15px 8px;
-			border: 3px solid #2c3e50;
+			border: 3px solid #46433A;
 			border-radius: 5px;
-			color: #2c3e50;
+			color: #46433A;
 			font-size: 1em;
 		}
 		
@@ -60,10 +60,10 @@
 			right: 15px;
 			bottom: 20px;
 			padding: 8px 15px;
-			background: whitesmoke;
-			border: 3px solid #2c3e50;
+			background:whitesmoke;
+			border: 3px solid #46433A;
 			border-radius: 5px;
-			color: #2c3e50;
+			color: #46433A;
 			width: 160px;
 			height: 225px;
 		}
@@ -72,15 +72,15 @@
 			text-align: right;
 			font-weight: 500;
 			margin: 10px 0 20px;
-			color: #2c3e50
+			color: #46433A
 		}
 		
 		#info {
 			padding: 8px 15px;
 			background: whitesmoke;
-			border: 3px solid #2c3e50;
+			border: 3px solid #46433A;
 			border-radius: 5px;
-			color: #2c3e50;
+			color: #46433A;
 			position: absolute;
 			font-size: 1em;
 			max-width: 220px;
@@ -91,11 +91,11 @@
 		}
 		
 		.women {
-			color: #D96D02;
+			color: #CE534D;
 		}
 		
 		.men {
-			color: #2c3e50;
+			color: #64B6B1;
 		}
 		
 		#info span:last-child {
@@ -110,15 +110,15 @@
 			bottom: 0;
 			width: 33%;
 			background: whitesmoke;
-			border-right: 2px solid #2c3e50;
+			border-right: 2px solid #46433A;
 			overflow-y: scroll;
 		}
 		
 		h1 {
 			padding: 8px 25px 8px 15px;
 			margin: 0;
-			background: #2c3e50;
-			color: whitesmoke;
+			background: #46433A;
+			color: "whitesmoke";
 			font-weight: 400;
 			font-size: 1.5em;
 			text-align: left;
@@ -127,7 +127,7 @@
 		h2 {
 			margin: 0;
 			padding: 8px 25px 8px 15px;
-			color: #2c3e50;
+			color: #46433A;
 			font-weight: 500;
 			font-size: 1.2em;
 			text-align: left;
@@ -159,10 +159,42 @@
 		}
 		
 		a {
-			color: #2c3e50;
+			color: #46433A;
 			text-decoration: none;
 			font-size: 1.2em;
 			font-weight: bold;
+		}
+		
+		.legend {
+			padding: 6px 8px;
+			font-size: 1em;
+			background: rgba(255, 255, 255, 0.8);
+			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+			border-radius: 5px;
+		}
+		
+		.legend h3 {
+			font-size: 1.1em;
+			font-weight: normal;
+			color: #001323;
+			margin: 0 0 10px 0;
+		}
+		
+		.legend span {
+			width: 20px;
+			height: 20px;
+			float: left;
+			margin: 0 10px 4px 0;
+		}
+		
+		.legend label {
+			font-size: 1.1em;
+		}
+		
+		.legend label:after {
+			content: '';
+			display: block;
+			clear: both;
 		}
 	</style>
 </head>
@@ -211,14 +243,12 @@
 		var map = L.mapbox.map('map', 'mapbox.light', {
 			center: [-.23, 37.8],
 			zoom: 7,
-			minZoom: 7,
-			maxZoom: 8,
+			minZoom: 2,
+			maxZoom: 20,
 			maxBounds: L.latLngBounds([-6.22, 27.72], [5.76, 47.83])
 		});
 
-		$.getJSON("health_spending_county.json", function(data) {
-    L.geoJson(data).addTo(map);
-});
+
 		var scaleFactor = .6;
 
 		omnivore.csv('Kenya_HIV_Gender.csv')
@@ -237,7 +267,7 @@
 			var women = L.geoJson(hivData, {
 				pointToLayer: function (feature, latlng) {
 					return L.circleMarker(latlng, {
-						color: '#e67e22',
+						color: '#CE534D',
 						opacity: 1,
 						weight: 2.5,
 						fillOpacity: 0,
@@ -245,13 +275,12 @@
 
 					});
 				}
-			}).addTo(map);
-
+			}).addTo(map);;
 			var men = L.geoJson(hivData, {
 				pointToLayer: function (feature, latlng) {
 					return L.circleMarker(latlng, {
-						color: '#2c3e50',
-						fillColor: '#2c3e50',
+						color: '#64B6B1',
+						fillColor: '#64B6B1',
 						opacity: 1,
 						weight: 2.5,
 						fillOpacity: 0,
@@ -293,78 +322,106 @@
 
 		function infoWindow(women, men) {
 
-			var info = $('#info');
+				var info = $('#info');
 
-			men.on('mouseover', function (e) {
+				men.on('mouseover', function (e) {
 
-				var props = e.layer.feature.properties;
-				console.log(props);
-				info.show();
-				$('#info p:first-child span').text(props.COUNTY);
-				$('.women span:first-child').text('HIV rate ');
-				$('.men span:first-child').text('HIV rate ');
+					var props = e.layer.feature.properties;
+					console.log(props);
+					info.show();
+					$('#info p:first-child span').text(props.County);
+					$('.women span:first-child').text('HIV rate ');
+					$('.men span:first-child').text('HIV rate ');
 
-				$('.women span:last-child').text(props['wom_hiv'] + "%");
-				$('.men span:last-child').text(props['men_hiv'] + "%");
+					$('.women span:last-child').text(props['wom_hiv'] + "%");
+					$('.men span:last-child').text(props['men_hiv'] + "%");
 
-				e.layer.setStyle({
-					fillOpacity: .4
+					e.layer.setStyle({
+						fillOpacity: .4
+					});
+
 				});
 
-			});
-
-			men.on('mouseout', function (e) {
-				info.hide();
-				e.layer.setStyle({
-					fillOpacity: 0
-				});
-			});
-
-			women.on('mouseover', function (e) {
-
-				var props = e.layer.feature.properties;
-				console.log(props);
-				info.show();
-				$('#info p:first-child span').text(props.COUNTY);
-				$('.women span:first-child').text('HIV rate ');
-				$('.men span:first-child').text('HIV rate ');
-
-				$('.women span:last-child').text(props['wom_hiv'] + "%");
-				$('.men span:last-child').text(props['men_hiv'] + "%");
-
-				e.layer.setStyle({
-					fillOpacity: .4
+				men.on('mouseout', function (e) {
+					info.hide();
+					e.layer.setStyle({
+						fillOpacity: 0
+					});
 				});
 
-			});
+				women.on('mouseover', function (e) {
 
-			women.on('mouseout', function (e) {
-				info.hide();
-				e.layer.setStyle({
-					fillOpacity: 0
+					var props = e.layer.feature.properties;
+					//console.log(props);
+					info.show();
+					$('#info p:first-child span').text(props.COUNTY);
+					$('.women span:first-child').text('HIV rate ');
+					$('.men span:first-child').text('HIV rate ');
+
+					$('.women span:last-child').text(props['wom_hiv'] + "%");
+					$('.men span:last-child').text(props['men_hiv'] + "%");
+
+					e.layer.setStyle({
+						fillOpacity: .4
+					});
+
 				});
-			});
 
-
-			$(document).mousemove(function (e) {
-				info.css({
-					"left": e.pageX + 6,
-					"top": e.pageY - info.height() - 15
+				women.on('mouseout', function (e) {
+					info.hide();
+					e.layer.setStyle({
+						fillOpacity: 0
+					});
 				});
 
-				if (info.offset().top < 4) {
+
+				$(document).mousemove(function (e) {
 					info.css({
-						"top": e.pageY + 15
-					})
-				}
-				if (info.offset().left + info.width() >= $(window).width() - 40) {
-					info.css({
-						"left": e.pageX - info.width() - 30
-					})
-				}
-			});
+						"left": e.pageX + 6,
+						"top": e.pageY - info.height() - 15
+					});
 
+					if (info.offset().top < 4) {
+						info.css({
+							"top": e.pageY + 15
+						})
+					}
+					if (info.offset().left + info.width() >= $(window).width() - 40) {
+						info.css({
+							"left": e.pageX - info.width() - 30
+						})
+					}
+				});
+			}
+			//------------------------------------------------------
 
+		$.getJSON("health_spending_county.json", function (data) {
+
+			dataLayer = L.geoJson(data, {
+				style: getStyle
+			}).addTo(map).bringToBack();
+
+		});
+
+		function getStyle(feature) {
+			return {
+				weight: 3,
+				opacity: 0.1,
+				color: 'black',
+				fillOpacity: 0.7,
+				fillColor: getColor(feature.properties.spendingpp)
+
+			};
+			console.log(feature.properties);
+		}
+
+		function getColor(d) {
+			return d > 1510 ? '#252525' :
+				d > 876 ? '#636363' :
+				d > 662 ? '#969696' :
+				d > 517 ? '#cccccc' :
+				d > 0 ? '#f7f7f7' :
+				'#f7f7f7';
 		}
 	</script>
 </body>
