@@ -26,8 +26,8 @@
 			top: 0;
 			bottom: 0;
 			width: 33%;
-			background: green;
-			font-size: 1em
+			font-size: 1em;
+			color: whitesmoke
 		}
 		
 		#map {
@@ -49,38 +49,29 @@
 			bottom: 20px;
 			left: 36%;
 			padding: 6px 15px 8px;
-			border: 3px solid #46433A;
+			border: 3px solid #047d50;
 			border-radius: 5px;
-			color: #46433A;
+			color: #047d50;
 			font-size: 1em;
 		}
 		
-		#legend {
-			position: absolute;
-			right: 15px;
-			bottom: 20px;
-			padding: 8px 15px;
-			background:whitesmoke;
-			border: 3px solid #46433A;
-			border-radius: 5px;
-			color: #46433A;
-			width: 160px;
-			height: 225px;
-		}
-		
-		#legend h3 {
-			text-align: right;
-			font-weight: 500;
-			margin: 10px 0 20px;
-			color: #46433A
+		.legend label,
+		.legend span {
+			display: block;
+			float: left;
+			height: 15px;
+			width: 20%;
+			text-align: center;
+			font-size: 9px;
+			color: #808080;
 		}
 		
 		#info {
 			padding: 8px 15px;
 			background: whitesmoke;
-			border: 3px solid #46433A;
+			border: 3px solid #047d50;
 			border-radius: 5px;
-			color: #46433A;
+			color: #047d50;
 			position: absolute;
 			font-size: 1em;
 			max-width: 220px;
@@ -91,11 +82,11 @@
 		}
 		
 		.women {
-			color: #CE534D;
+			color: #ff8f25;
 		}
 		
 		.men {
-			color: #64B6B1;
+			color: #7d1404;
 		}
 		
 		#info span:last-child {
@@ -110,14 +101,14 @@
 			bottom: 0;
 			width: 33%;
 			background: whitesmoke;
-			border-right: 2px solid #46433A;
+			border-right: 2px solid #047d50;
 			overflow-y: scroll;
 		}
 		
 		h1 {
 			padding: 8px 25px 8px 15px;
 			margin: 0;
-			background: #46433A;
+			background: #047d50;
 			color: "whitesmoke";
 			font-weight: 400;
 			font-size: 1.5em;
@@ -127,7 +118,7 @@
 		h2 {
 			margin: 0;
 			padding: 8px 25px 8px 15px;
-			color: #46433A;
+			color: #047d50;
 			font-weight: 500;
 			font-size: 1.2em;
 			text-align: left;
@@ -159,42 +150,10 @@
 		}
 		
 		a {
-			color: #46433A;
+			color: #047d50;
 			text-decoration: none;
 			font-size: 1.2em;
 			font-weight: bold;
-		}
-		
-		.legend {
-			padding: 6px 8px;
-			font-size: 1em;
-			background: rgba(255, 255, 255, 0.8);
-			box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-			border-radius: 5px;
-		}
-		
-		.legend h3 {
-			font-size: 1.1em;
-			font-weight: normal;
-			color: #001323;
-			margin: 0 0 10px 0;
-		}
-		
-		.legend span {
-			width: 20px;
-			height: 20px;
-			float: left;
-			margin: 0 10px 4px 0;
-		}
-		
-		.legend label {
-			font-size: 1.1em;
-		}
-		
-		.legend label:after {
-			content: '';
-			display: block;
-			clear: both;
 		}
 	</style>
 </head>
@@ -240,7 +199,7 @@
 	<script>
 		L.mapbox.accessToken = 'pk.eyJ1Ijoicmdkb25vaHVlIiwiYSI6Im5Ua3F4UzgifQ.PClcVzU5OUj17kuxqsY_Dg';
 
-		var map = L.mapbox.map('map', 'mapbox.light', {
+		var map = L.mapbox.map('map', 'mapbox.dark', {
 			center: [-.23, 37.8],
 			zoom: 7,
 			minZoom: 2,
@@ -267,7 +226,7 @@
 			var women = L.geoJson(hivData, {
 				pointToLayer: function (feature, latlng) {
 					return L.circleMarker(latlng, {
-						color: '#CE534D',
+						color: '#ff8f25',
 						opacity: 1,
 						weight: 2.5,
 						fillOpacity: 0,
@@ -279,8 +238,8 @@
 			var men = L.geoJson(hivData, {
 				pointToLayer: function (feature, latlng) {
 					return L.circleMarker(latlng, {
-						color: '#64B6B1',
-						fillColor: '#64B6B1',
+						color: '#7d1404',
+						fillColor: '#7d1404',
 						opacity: 1,
 						weight: 2.5,
 						fillOpacity: 0,
@@ -317,7 +276,7 @@
 
 		function calcRadius(val) {
 			var radius = Math.sqrt(val / Math.PI);
-			return radius * 14;
+			return radius * 15;
 		}
 
 		function infoWindow(women, men) {
@@ -405,9 +364,9 @@
 
 		function getStyle(feature) {
 			return {
-				weight: 3,
-				opacity: 0.1,
-				color: 'black',
+				weight: 1,
+				opacity: 1,
+				color: 'white',
 				fillOpacity: 0.7,
 				fillColor: getColor(feature.properties.spendingpp)
 
@@ -416,12 +375,12 @@
 		}
 
 		function getColor(d) {
-			return d > 1510 ? '#252525' :
-				d > 876 ? '#636363' :
-				d > 662 ? '#969696' :
-				d > 517 ? '#cccccc' :
-				d > 0 ? '#f7f7f7' :
-				'#f7f7f7';
+			return d > 1510 ? '#047d50' :
+				d > 876 ? '#6c9980' :
+				d > 662 ? '#9cbba8' :
+				d > 517 ? '#cddcd3' :
+				d > 0 ? '#ffffff' :
+				'#ffffff';
 		}
 	</script>
 </body>
