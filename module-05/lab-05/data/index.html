@@ -212,11 +212,19 @@
 		});
 
 
-		var scaleFactor = .6;
+		var scaleFactor = .6,
+            dataLayer; // define globals explicitly
 
 		omnivore.csv('Kenya_HIV_Gender.csv')
 			.on('ready', function (e) {
-				drawMap(e.target.toGeoJSON());
+            
+            
+		      $.getJSON("health_spending_county.json", function (data) {
+
+
+				  drawMap(e.target.toGeoJSON(), data);
+              });
+                
 				// when this is fired, the layer
 				// is done being initialized
 			})
@@ -226,7 +234,12 @@
 			})
 
 
-		function drawMap(hivData) {
+		function drawMap(hivData, countyData) {
+            
+            dataLayer = L.geoJson(countyData, {
+				style: getStyle
+			}).addTo(map).bringToBack();
+            
 			var women = L.geoJson(hivData, {
 				pointToLayer: function (feature, latlng) {
 					return L.circleMarker(latlng, {
@@ -357,14 +370,6 @@
 				});
 			}
 			//------------------------------------------------------
-
-		$.getJSON("health_spending_county.json", function (data) {
-
-			dataLayer = L.geoJson(data, {
-				style: getStyle
-			}).addTo(map).bringToBack();
-
-		});
 
 		function getStyle(feature) {
 			return {
