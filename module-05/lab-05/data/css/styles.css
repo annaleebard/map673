@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+#side-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 33%;
+    font-size: 1em;
+    color: whitesmoke
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    width: 67%;
+    right: 0px
+}
+
+#download span {
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+#download {
+    position: absolute;
+    bottom: 20px;
+    left: 36%;
+    padding: 6px 15px 8px;
+    border: 3px solid #047d50;
+    border-radius: 5px;
+    color: #047d50;
+    font-size: 1em;
+}
+
+.legend label,
+.legend span {
+    display: block;
+    float: left;
+    height: 15px;
+    width: 20%;
+    text-align: center;
+    font-size: 9px;
+    color: #808080;
+}
+
+#info {
+    padding: 8px 15px;
+    background: whitesmoke;
+    border: 3px solid #047d50;
+    border-radius: 5px;
+    color: #047d50;
+    position: absolute;
+    font-size: 1em;
+    max-width: 220px;
+    display: none; /* so doesn't display on page load */
+}
+
+#info p {
+    margin: 3px 0 4px;
+}
+
+.women {
+    color: #ff8f25;
+}
+
+.men {
+    color: #7d1404;
+}
+
+#info span:last-child {
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+#side-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 33%;
+    background: whitesmoke;
+    border-right: 2px solid #047d50;
+    overflow-y: scroll;
+}
+
+h1 {
+    padding: 8px 25px 8px 15px;
+    margin: 0;
+    background: #047d50;
+    color: "whitesmoke";
+    font-weight: 400;
+    font-size: 1.5em;
+    text-align: left;
+    font-family: Montserrat;
+}
+
+h2 {
+    margin: 0;
+    padding: 8px 25px 8px 15px;
+    color: #047d50;
+    font-weight: 500;
+    font-size: 1.2em;
+    text-align: left;
+     font-family: Montserrat;
+}
+
+#side-panel p {
+    margin: 8px 0 4px;
+    padding: 0 25px 0 15px;
+    color: #3d3d3d;
+    text-align: left;
+    font-size: 1em;
+}
+
+#side-panel p:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+#side-panel img {
+    float: right;
+    margin: 0 0 15px 15px;
+}
+
+#download {
+    margin: 0 0 5px 5px;
+    padding: 0 5px 0 5px;
+    background: whitesmoke;
+}
+
+a {
+    color: #047d50;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+}
