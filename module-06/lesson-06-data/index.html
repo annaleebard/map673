@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>673 Module 06 CartoDB Starter Template</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+		<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+
+
+	<style>
+		html,
+		body,
+		#map {
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			background: #3d3d3d;
+		}
+		h1{
+			font-family: Oswald;
+			position: absolute;
+			opacity: .8;
+			top: 10px;
+			left: 60px;
+			padding: 8px 10px;
+			margin:0;
+			color:#7c7469;
+			background:whitesmoke;
+			border-radius: 10px;
+			z-index:100;
+			border: 20px black;
+		}
+		h2{
+			font-family: Oswald;
+			position: absolute;
+			opacity: .8;
+			top: 80px;
+			left: 60px;
+			padding: 8px 10px;
+			margin:0;
+			color:#7c7469;
+			background:whitesmoke;
+			border-radius: 10px;
+			z-index:100;
+			border: 20px black;
+			font-size: .9em
+		}
+		a:link{
+			color: #7c7469;
+		}
+		a:visited{
+			color: #7c7469;
+		}
+		a:hover{
+			color: black
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Disability and Coal</h1>
+	<h2>Data: <a href= 'https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwje6bbz5OvMAhUGFz4KHRBrCtQQjBAIKTAC&url=http%3A%2F%2Ffactfinder.census.gov%2F&usg=AFQjCNE1EUX9MVlsh1XWYPaHElLgWjD3Vw&bvm=bv.122448493,d.cWw'>US Census Bureau</a> <a href='https://ghgdata.epa.gov/ghgp/main.do'>and EPA </a></h2>
+	<div id="map"></div>
+    <script type="cartocss/html" id="counties-styles">
+	
+			#ky_mobility [ m_35_64 <= 0.07852779] {
+			   polygon-fill: #005824;
+			}
+			#ky_mobility [ m_35_64 <= 0.044621265] {
+			   polygon-fill: #238B45;
+			}
+			#ky_mobility [ m_35_64 <= 0.035298919] {
+			   polygon-fill: #41AE76;
+			}
+			#ky_mobility [ m_35_64 <= 0.029156816] {
+			   polygon-fill: #66C2A4;
+			}
+			#ky_mobility [ m_35_64 <= 0.02539612] {
+			   polygon-fill: #CCECE6;
+			}
+			#ky_mobility [ m_35_64 <= 0.021827957] {
+			   polygon-fill: #D7FAF4;
+			}
+			#ky_mobility [ m_35_64 <= 0.01793339] {
+			   polygon-fill: #EDF8FB;
+			}
+			#coalmines_us_2013{
+			line-width: 2;
+			line-opacity:.5;
+			}
+	</script>
+	
+	<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+
+	<script>
+		var map = L.map('map', {
+			center: [37.8, -85.5],
+			zoom: 7.5
+		});
+
+		 var landCSS = '#tl_2015_us_state{'+
+			 " polygon-fill: #d8b365;"+
+			 ' polygon-opacity: 0.3;'+
+			 ' line-color: black;'+
+			'  line-width: 2;'+
+			 ' line-opacity: .1;'+
+			'}'
+		var coalCSS = '#coalmines_us_2013{'+
+			  'marker-fill-opacity: 0.7;'+
+			  'marker-line-color: black;'+
+			  'marker-line-width: 1;'+
+			  'marker-line-opacity: 1;'+
+			  'marker-placement: point;'+
+			  'marker-type: ellipse;'+
+			  'marker-width: 8.5;'+
+			  'marker-fill: black;'+
+			  'marker-allow-overlap: true;'+
+			'}'
+		
+		var sourceObject = {
+			user_name: 'annaleebard',
+			type: 'cartodb',
+			sublayers: [
+				
+				{
+					sql: "SELECT * FROM ky_mobility",
+					cartocss: $("#counties-styles").text()
+				},
+				{
+					sql: "SELECT * FROM coalmines_us_2013",
+					cartocss: coalCSS
+				},
+				{
+					sql: "SELECT * FROM tl_2015_us_state",
+					cartocss: landCSS
+				}
+			]
+		};
+
+		cartodb.createLayer(map, sourceObject).addTo(map);
+	</script>
+</body>
+
+</html>
