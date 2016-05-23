@@ -12,6 +12,7 @@
 	<style>
 		html,
 		body,
+		
 		#map {
 			height: 100%;
 			padding: 0;
@@ -47,6 +48,16 @@
 			border: 20px black;
 			font-size: .9em
 		}
+		h3{
+			font-family: Oswald;
+			padding: 2px 2px 2px 2px;
+		}
+		p{
+			font-family: Oswald;
+			margin-top: .01em;
+			margin-bottom: .2em;
+			text-align: center	
+		}
 		a:link{
 			color: #7c7469;
 		}
@@ -56,13 +67,66 @@
 		a:hover{
 			color: black
 		}
+		.legend {
+			position: absolute;
+			bottom:20px;
+			right: 30px;
+            padding: 10px 10px;
+            font-size: 1em;
+			color:#7c7469;
+            background: whitesmoke;
+            border-radius: 10px;
+            width: 393px;
+			opacity: .8;
+        }
+        
+        .legend h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+            line-height: 1em;
+            color:#7c7469;
+            margin: 0;
+        }
+        
+        .legend li {
+            list-style-type: none;
+            display: inline;
+            height: 15px;
+        }
+        
+        .legend span {
+            width: 45px;
+            height: 20px;
+            float:left;
+            margin-right: 2px;
+			border:solid 1px #7c7469
+        }
+		.legend span1{
+			font-family: Oswald;
+			float: left;
+			width: 30
+		}
 	</style>
 </head>
 
 <body>
-	<h1>Disability and Coal</h1>
+	<h1>Mobility Disabilities and Coal</h1>
 	<h2>Data: <a href= 'https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwje6bbz5OvMAhUGFz4KHRBrCtQQjBAIKTAC&url=http%3A%2F%2Ffactfinder.census.gov%2F&usg=AFQjCNE1EUX9MVlsh1XWYPaHElLgWjD3Vw&bvm=bv.122448493,d.cWw'>US Census Bureau</a> <a href='https://ghgdata.epa.gov/ghgp/main.do'>and EPA </a></h2>
 	<div id="map"></div>
+	<div id='legend'>
+	<ul class = 'legend lables'>
+		<p>Population with Mobility Related Disability by County</p>
+		<span1 id='frl'>2%</span1>
+		<span style='background:#EDF8FB'></span>
+		<span style='background:#D7FAF4'></span>
+		<span style='background:#CCECE6'></span>
+		<span style='background:#66C2A4'></span>
+		<span style='background:#41AE76'></span>
+		<span style='background:#238B45'></span>
+		<span style='background:#005824'></span>
+		<span1 id='fr'>8%</span1>
+		
+		</ul></div>
     <script type="cartocss/html" id="counties-styles">
 	
 			#ky_mobility [ m_35_64 <= 0.07852779] {
@@ -139,7 +203,16 @@
 			]
 		};
 
-		cartodb.createLayer(map, sourceObject).addTo(map);
+//		var densityLegendNon = new cdb.geo.ui.Legend.Density({
+//                title: " Population with Mobility Related Disability",
+//                left: "2%", right: "8%", colors: [ "#EDF8FB", "#D7FAF4", "#CCECE6", "#66C2A4", "#41AE76", '#238B45', "#005824" ]
+//            });
+//            $('#map').append(densityLegendNon.render().el);
+//		
+		cartodb.createLayer(map, sourceObject,{
+			legends:true
+		}).addTo(map)
+		
 	</script>
 </body>
 
