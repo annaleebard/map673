@@ -112,8 +112,8 @@
 <body>
 	<h1>Mobility Disabilities and Coal</h1>
 	<h2>Data: <a href= 'https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwje6bbz5OvMAhUGFz4KHRBrCtQQjBAIKTAC&url=http%3A%2F%2Ffactfinder.census.gov%2F&usg=AFQjCNE1EUX9MVlsh1XWYPaHElLgWjD3Vw&bvm=bv.122448493,d.cWw'>US Census Bureau</a> <a href='https://ghgdata.epa.gov/ghgp/main.do'>and EPA </a></h2>
-	<div id="map"><div id='legend'></div></div>
-<!--
+	<div id="map"></div>
+<!--	<div id='legend'></div>-->
 	<div id='legend'>
 	<ul class = 'legend lables'>
 		<p>Population with Mobility Related Disability by County</p>
@@ -128,7 +128,6 @@
 		<span1 id='fr'>8%</span1>
 		
 		</ul></div>
--->
     <script type="cartocss/html" id="counties-styles">
 	
 			#ky_mobility [ m_35_64 <= 0.07852779] {
@@ -205,12 +204,12 @@
 			]
 		};
 
-		var densityLegendNon = new cdb.geo.ui.Legend.Density({
-                title: " Population with Mobility Related Disability",
-                left: "2%", right: "8%", colors: [ "#EDF8FB", "#D7FAF4", "#CCECE6", "#66C2A4", "#41AE76", '#238B45', "#005824" ]
-            });
-            $('#legend').append(densityLegendNon.render().el);
-		
+//		var densityLegendNon = new cdb.geo.ui.Legend.Density({
+//                title: " Population with Mobility Related Disability",
+//                left: "2%", right: "8%", colors: [ "#EDF8FB", "#D7FAF4", "#CCECE6", "#66C2A4", "#41AE76", '#238B45', "#005824" ]
+//            });
+//            $('#legend').append(densityLegendNon.render().el);
+//		
 		cartodb.createLayer(map, sourceObject,{
 			legends:true
 		}).addTo(map)
