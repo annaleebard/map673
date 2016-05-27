@@ -14,7 +14,6 @@
 		}
 		
 		.county {
-			fill: steelblue;
 			stroke: white;
 		}
 		
@@ -76,6 +75,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/0.9.0/simple_statistics.min.js"></script>
+
 	<script>
 		var width = 900,
 			height = 600;
@@ -93,25 +94,26 @@
 			.projection(projection); // assign the project we just created to it
 
 		queue()
-			.defer(d3.json, 'us-counties-topo.json')
+			.defer(d3.json, "https://rgdonohue.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM uninsured_adults_county")
 			.defer(d3.json, 'na_land_clipped.json')
-			.defer(d3.csv, 'direct-emitters.csv')
+			//			.defer(d3.csv, 'direct-emitters.csv')
 			.await(makeMap);
 
-		function makeMap(error, counties, na, emitters) {
+		function makeMap(error, counties, na) {
 
-			var data = [];
+			var breaks = ss.jenks(counties.features.map(function (d) {
+				return d.properties.uninsured;
+			}), 5)
 
-			emitters.forEach(function (emitter) {
-				data.push(Number(emitter.total_emissions));
-			});
+			breaks.shift(); // remove min value from breaks Array before applying to domain
+			breaks.pop(); // same for max
 
-			var min = Math.min.apply(Math, data),
-				max = Math.max.apply(Math, data);
 
-			var radius = d3.scale.sqrt()
-				.domain([min, max])
-				.range([3, 20]);
+			var colors = ["#feedde", "#fdbe85", "#fd8d3c", "#e6550d", "#a63603"];
+
+			var jenks = d3.scale.threshold()
+				.domain(breaks)
+				.range(colors);
 
 			var radius = d3.scale.sqrt()
 				.domain([0, 1e7])
@@ -127,67 +129,14 @@
 
 			svg.append("g") // create and append a new SVG 'g' element to the svg
 				.selectAll("path") // selectAll the path features that haven't been created yet
-				.data(topojson.feature(counties, counties.objects.counties).features) // bind the GeoJSON features data to them
+				.data(counties.features) // bind the GeoJSON features data to them
 				.enter() // prepare to
 				.append("path") // append the newly create path elements to the 'g'
 				.attr("d", geoPath) // define the screen coordinates of the new path(s)
 				.attr("class", "county") // give each a class name of 'county'
-				.on("mouseover", function (d) {
-					d3.select("h2").text(d.properties.NAME + 'county')
-					d3.select(this).attr('class', 'county hover')
+				.attr("fill", function (d) {
+					return jenks(d.properties.uninsured);
 				})
-				.on("mouseout", function (d) {
-					d3.select("h2").text("");
-					d3.select(this).attr("class", "county");
-				});
-
-
-			var facilities = svg.append("g")
-				.selectAll("circle")
-				.data(emitters)
-				.sort(function (a, b) {
-					return b.properties.total_emissions - a.properties.total_emissions;
-				})
-				.enter()
-				.append("circle")
-				.attr("cx", function (d) {
-					d.position = projection([d.lon, d.lat]);
-
-					if (d.position) {
-						return d.position[0];
-					} else {
-						console.log(d);
-					}
-				})
-				.attr("cy", function (d) {
-					return d.position[1];
-				})
-				.attr("r", function (d) {
-					return radius(d.total_emissions)
-				})
-				.attr("class", "emitter");
-
-			var output = d3.select('#emmission-value').text(max.toLocaleString());
-
-			d3.select(".slider")
-				.attr("min", min)
-				.attr("max", max)
-				.attr("value", max)
-				.attr("step", (max - min) / 300)
-				.on("input", function () {
-					update(this.value);
-				});
-
-			function update(val) {
-				output.text(Number(val).toLocaleString());
-
-				facilities.attr("display", function (d) {
-					if (val <= Number(d.total_emissions)) {
-						return "none";
-					}
-				})
-			}
-
 		}
 	</script>
 </body>
