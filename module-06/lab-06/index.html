@@ -194,7 +194,7 @@
 					cartocss: $("#counties-styles").text()
 				},
 				{
-					sql: "SELECT * FROM coalmines_us_2013",
+                    sql: "SELECT coalmines_us_2013.* FROM coalmines_us_2013, ky_mobility WHERE ST_Within(coalmines_us_2013.the_geom, ky_mobility.the_geom)",
 					cartocss: coalCSS
 				},
 				{
