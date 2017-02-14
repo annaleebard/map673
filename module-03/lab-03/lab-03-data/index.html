@@ -122,29 +122,10 @@
     
      <label><span class="min">2000</span><span class="max">2013</span>
         <input type="range" min = "2001", max= "2013", 
-               value = "2001", step= "1", class="year-slider"></input>
+               value = "2001", step= "1", class="year-slider">
     </label>
      </div>
 
-    <div id = 'ui-controls'>
-        <label> Choose something: <br>
-        <select> name = "unemployment">
-            <option value="2001" selected>2001</option>
-            <option value="2002">2002</option>   
-            <option value="2003">2003</option>
-            <option value="2004">2004</option>
-            <option value="2005">2005</option>
-            <option value="2006">2006</option>
-            <option value="2007">2007</option>
-            <option value="2008">2008</option>   
-            <option value="2009">2009</option>
-            <option value="2010">2010</option>
-            <option value="2011">2011</option>
-            <option value="2012">2012</option>
-            <option value="2013">2013</option>
-        </select>
-        </label>
-    </div>
     
     <div id='map'></div>
     
@@ -217,12 +198,6 @@
         }); // end of Papa.parse() 
     });  // end of $.getJSON()
         
-        
-        
-         $('select[name="unemployment"]').change(function() {
-             attribute = $(this).val();
-             drawMap();
-    })      
         
         $(".year-slider")
         .on('input change', function() {
