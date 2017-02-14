@@ -15,10 +15,6 @@ A simple and meaningful representation of data which presents the data’s magni
 - Understand the local trends of HIV incidence and the variations between genders of the infected population
 - Learn where the gender gap is most prevalent to begin discussion of possible causes of the disparity as well as possible solutions 
 - See where women are most disproportionately affected by HIV in order to plan for allocation of services and treatment
-- Gain knowledge about distribution of HIV prevalence of adults (age 15+) across Kenya
-- Understand the local trends of HIV incidence and the variations between genders of the infected population
-- Learn where the gender gap is most prevalent to begin discussion of possible causes of the disparity as well as possible solutions 
-- See where women are most disproportionately affected by HIV in order to plan for allocation of services and treatment
 
 
 ## Content requirements:
